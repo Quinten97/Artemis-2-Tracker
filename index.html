@@ -745,7 +745,7 @@
 
     <script>
       const API_URL = "https://api.issinfo.net/artemis/live";
-
+      let launchTime = null;
       function fmtDate(iso) {
         const d = new Date(iso);
         return (
@@ -903,7 +903,7 @@
           mission.splashdown_utc,
         );
         const curIdx = currentPhaseIndex(mission.phases, daysSince);
-
+        launchTime = mission.launch_utc;
         buildBar(mission.phases, mission, progress);
 
         document.getElementById("progress-pct").textContent =
@@ -976,11 +976,10 @@
       }
 
       setInterval(() => {
-        document.getElementById("met-display").textContent = fmtMET(
-          document.querySelector("#c-launch")?.dataset?.launch ||
-            new Date().toISOString(),
-        );
-      }, 10000);
+        if (!launchTime) return;
+
+        document.getElementById("met-display").textContent = fmtMET(launchTime);
+      }, 1000);
 
       fetchData();
     </script>
